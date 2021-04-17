@@ -162,6 +162,7 @@ local TabSelectorOffset = 50
 local MAIN_SLIDER_RUNNING = false
 local WindowFunctions = {} 
 local Tabs = {}
+local DOBT = {}
 local ConnectionsTable = {}
 
 local MainScreen = Instance.new("ScreenGui",MainParent)
@@ -570,7 +571,7 @@ RoundGui(TabIndent,UDim.new(0,Info.RoundSize))
 TabIndent.BackgroundColor3 = DATA_GUI_COLORS.TabSelectorButtonBGColor
 TabIndent.Parent = TabsSelectorSF
 TabIndent.TextWrapped = true
-TabIndent.Text = TabInfo.Name
+TabIndent.Text = TabInfo.TabName
 TabIndent.TextColor3 = DATA_GUI_COLORS.TabSelectorButtonTextColor
 TabIndent.ZIndex = 11
 
@@ -1116,6 +1117,11 @@ ListFrame.BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownScrollingFrameColor
 ListFrame.AutomaticSize = Enum.AutomaticSize.Y
 ListFrame.ClipsDescendants = true
 ListFrame.Visible = false
+table.insert(DOBT,{Item = S1,OrigZIn = S1.ZIndex})
+table.insert(DOBT,{Item = S2,OrigZIn = S2.ZIndex})
+table.insert(DOBT,{Item = Button,OrigZIn = Button.ZIndex})
+table.insert(DOBT,{Item = Label,OrigZIn = Label.ZIndex})
+
 RoundGui(ListFrame,UDim.new(0,Info.RoundSize))
 local SizePlaceHolder = Instance.new("Frame",ListFrame)
 SizePlaceHolder.Size = UDim2.new(MainFrame.Size.X,MainFrame.Size.Y)
@@ -1132,7 +1138,7 @@ UiListLayout.Name = GRName()
 
 local ItemsTable = {}
 local Selected = ""
-function AddItem(Name)
+local function AddItem(Name)
 
 local Button = Instance.new("TextButton",ListFrame) 
 Button.BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownItemBackgroundColor
@@ -1162,6 +1168,9 @@ if IsOnCycle == false then
 IsOnCycle = true
 if Toggled == true then
 Toggled = false
+for _,i in ipairs(DOBT) do
+i.Item.ZIndex = i.OrigZIn
+end
 Tween:Create(S1,TweenInfo.new(1,5,2),{ Rotation = 90,BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownButtonIconColorDeactivated}):Play()
 Tween:Create(S2,TweenInfo.new(1,5,2),{ Rotation = 0,BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownButtonIconColorDeactivated}):Play()
 Tween:Create(Button,TweenInfo.new(1,5,2),{BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownButtonBGColorDeactivated}):Play()
@@ -1170,6 +1179,11 @@ wait(0.65)
 ListFrame.Visible = false
 elseif Toggled == false then
 Toggled = true
+for _,i in ipairs(DOBT) do
+if i.Item ~= S1 and i.Item ~= S2 and i.Item ~= Button and i.Item ~= Label then
+i.Item.ZIndex = 11
+end
+end
 Tween:Create(S1,TweenInfo.new(1,5,2),{ Rotation = -45,BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownButtonIconColorActivated}):Play()
 Tween:Create(S2,TweenInfo.new(1,5,2),{ Rotation = -135,BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownButtonIconColorActivated}):Play()
 Tween:Create(Button,TweenInfo.new(1,5,2),{BackgroundColor3 = DATA_GUI_COLORS.ITEM_DropdownButtonBGColorActivated}):Play()
@@ -1430,4 +1444,17 @@ end
 
 return WindowFunctions
 end
+
+
+
+
+
+
+
+
+
+
+
 return NilUiLib
+
+
